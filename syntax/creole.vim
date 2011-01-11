@@ -6,11 +6,20 @@
 syn match creoleUrl     "\(http\|ftp\)://\([a-zA-Z0-9-_~%*@&=+$/#\[\]]\|[(,.?!:;"')]\(\s\|$\)\@!\)*"
 syn region creoleEscape matchgroup=creoleKeyword start=+\~+ end=+\s+ end=+$+
 
-syn region creoleLinkBlock   matchgroup=creoleKeyword  start=+\[\[+ end=+\]\]+ contains=creoleLinkBar,creoleBold,creoleItalic,creoleBoldItalic,creoleBreak,creoleCode,creoleUrl
-syn region creoleImgBlock   matchgroup=creoleKeyword  start=+{{+ end=+}}+ contains=creoleLinkBar,creoleBold,creoleItalic,creoleBoldItalic,creoleBreak,creoleCode,creoleUrl
+syn region creoleLinkBlock   matchgroup=creoleKeyword  start=+\[\[+ end=+\]\]+ contains=creoleLinkBar,creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode,creoleUrl
+syn region creoleImgBlock   matchgroup=creoleKeyword  start=+{{+ end=+}}+ contains=creoleLinkBar,creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode,creoleUrl
 syn match creoleLinkBar "|" contained
+syn match creoleLinkBar "->" contained
 
 syn region creoleCode   matchgroup=creoleKeyword  start=+{{{+ end=+}}}+ skip=+^\s\+}}}+
+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+##+ end=+##+ end=+\n+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+__+ end=+__+ end=+\n+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+--+ end=+--+ end=+\n+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+\^\^+ end=+\^\^+ end=+\n+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+,,+ end=+,,+ end=+\n+
+
+syn region creolePlugin   matchgroup=creoleKeyword start=+<<+ end=+>>+ end=+\n+
 
 syn region creoleBold   matchgroup=creoleKeyword start=+\*\*+ end=+\*\*+ end=+\n\n+ contains=creoleBoldItalic,creoleLinkBlock
 syn region creoleItalic matchgroup=creoleKeyword start=+//+ end=+//+ end=+\n\n+ skip=+://+ contains=creoleBoldItalic,creoleLinkBlock
@@ -25,17 +34,21 @@ syn region creoleH5     matchgroup=creoleHead start="^\s*=====[^=]" end="\(\s*=\
 syn region creoleH6     matchgroup=creoleHead start="^\s*======[^=]" end="\(\s*=\+\s*\)\?$"
 
 syn region creoleTableLine matchgroup=creoleTableBorder start=+^\s*|=\?+ end=+|\?\s*$+ contains=creoleTableCell,creoleTableBorder
-syn match creoleTableCell "[^|]*\(|=\?\)\@!" contained contains=creoleBold,creoleItalic,creoleBoldItalic,creoleBreak,creoleCode
+syn match creoleTableCell "[^|]*\(|=\?\)\@!" contained contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
 syn match creoleTableBorder "|=\?" contained
 
 syn match creoleHRule   "^\s*----\s*$"
 syn match creoleBreak   "\\\\"
 
-syn region creoleList     matchgroup=creoleOperator start="^\s*\(\*\|\#\)\+" end="\n\n" end="\n\([*#]\)\@=" transparent
+syn region creoleList     matchgroup=creoleOperator start="^\s*\(\*\|\#\)\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
+syn region creoleList     matchgroup=creoleOperator start="^\s*\:\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
+syn region creoleList     matchgroup=creoleOperator start="^\s*>\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
+syn region creoleList     matchgroup=creoleOperator start="^\s*;" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
 
 hi def link creoleUrl Underlined
 hi def link creoleLinkText Todo
 hi def link creoleCode Comment
+hi def link creolePlugin Statement
 hi def link creoleOperator Statement
 hi def link creoleKeyword Special
 hi def link creoleHead Statement
@@ -58,3 +71,4 @@ hi def creoleBoldUnderlineItalic term=bold,italic,underline cterm=bold,italic,un
 hi def creoleUnderline           term=underline cterm=underline gui=underline
 hi def creoleUnderlineItalic     term=italic,underline cterm=italic,underline gui=italic,underline
 hi def creoleItalic              term=italic cterm=italic gui=italic
+hi def link creoleMiscFormatting Comment
