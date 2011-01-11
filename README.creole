@@ -1,0 +1,9 @@
+= Vim syntax for Creole 1.0
+Syntax file for Creole in vim.
+
+== Changelog
+* The "binary day" first release: As of 2011-01-11, this works better (in my
+point of view) that the existing one by Peter Hoffmann
+(http://www.vim.org/scripts/script.php?script_id=1909) when running on the test
+from http://www.wikicreole.org/wiki/Creole1.0TestCases
+

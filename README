@@ -1,0 +1,5 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3400
+
+This works better (in my point of view) that the existing one by Peter Hoffmann (vimscript#1909) when running on the test from http://www.wikicreole.org/wiki/Creole1.0TestCases
+
+Repository and bug tracker can be found here: https://bitbucket.org/shellholic/vim-creole
