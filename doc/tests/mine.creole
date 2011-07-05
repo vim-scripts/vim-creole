@@ -22,6 +22,14 @@ From http://www.wikicreole.org/wiki/CreoleAdditions:
 * This is ,,subscripted,, text. 
 * This is __underlined__ text. 
 
+Last until ##end of paragraph
+
+Last until ^^end of paragraph
+
+Last until ,,end of paragraph
+
+Last until __end of paragraph
+
 === Alternate Link Syntax
 * [[description -> link]]
 * [[the -> can be used to make a link -> TextFormattingRules]]

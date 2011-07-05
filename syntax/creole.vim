@@ -1,9 +1,15 @@
 " Vim syntax file
 " Language:     creole
 " Maintainer:   shellholic <shellholic+vim-creole@gmail.com>
-" Last Change:  2011-01-11
+" Contributor:  Ross Light <ross@zombiezen.com>
+" Last Change:  2011-07-05
 
-syn match creoleUrl     "\(http\|ftp\)://\([a-zA-Z0-9-_~%*@&=+$/#\[\]]\|[(,.?!:;"')]\(\s\|$\)\@!\)*"
+if exists("b:current_syntax")
+    finish
+endif
+
+syn match creoleUrl     "\(https\?\|ftp\)://\([a-zA-Z0-9-_~%*@&=+$/#\[\]]\|[(,.?!:;"')]\(\s\|$\)\@!\)*"
+syn match creoleUrl     "\<\([A-Z][a-z0-9.]\+\)\{2,}\>"
 syn region creoleEscape matchgroup=creoleKeyword start=+\~+ end=+\s+ end=+$+
 
 syn region creoleLinkBlock   matchgroup=creoleKeyword  start=+\[\[+ end=+\]\]+ contains=creoleLinkBar,creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode,creoleUrl
@@ -13,18 +19,18 @@ syn match creoleLinkBar "->" contained
 
 syn region creoleCode   matchgroup=creoleKeyword  start=+{{{+ end=+}}}+ skip=+^\s\+}}}+
 
-syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+##+ end=+##+ end=+\n+
-syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+__+ end=+__+ end=+\n+
-syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+--+ end=+--+ end=+\n+
-syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+\^\^+ end=+\^\^+ end=+\n+
-syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+,,+ end=+,,+ end=+\n+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+##+ end=+##+ end=+\n$+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+__+ end=+__+ end=+\n$+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+--+ end=+--+ end=+\n$+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+\^\^+ end=+\^\^+ end=+\n$+
+syn region creoleMiscFormatting   matchgroup=creoleKeyword start=+,,+ end=+,,+ end=+\n$+
 
-syn region creolePlugin   matchgroup=creoleKeyword start=+<<+ end=+>>+ end=+\n+
+syn region creolePlugin   matchgroup=creoleKeyword start=+<<+ end=+>>+ end=+$+
 
-syn region creoleBold   matchgroup=creoleKeyword start=+\*\*+ end=+\*\*+ end=+\n\n+ contains=creoleBoldItalic,creoleLinkBlock
-syn region creoleItalic matchgroup=creoleKeyword start=+//+ end=+//+ end=+\n\n+ skip=+://+ contains=creoleBoldItalic,creoleLinkBlock
-syn region creoleBoldItalic matchgroup=creoleKeyword start=+\*\*+ end=+\*\*+ end=+\n\n+ contained
-syn region creoleBoldItalic matchgroup=creoleKeyword start=+//+ end=+//+ end=+\n\n+ contained
+syn region creoleBold   matchgroup=creoleKeyword start=+\*\*+ end=+\*\*+ end=+\(\n\n\)\@=+ end=+\(\n[*#:;=>]\)\@=+ contains=creoleBoldItalic,creoleLinkBlock
+syn region creoleItalic matchgroup=creoleKeyword start=+//+ end=+//+ end=+\(\n\n\)\@=+ skip=+://+ contains=creoleItalicBold,creoleLinkBlock
+syn region creoleItalicBold matchgroup=creoleKeyword start=+\*\*+ end=+\*\*+ end=+\(\n\n\)\@=+ contained
+syn region creoleBoldItalic matchgroup=creoleKeyword start=+//+ end=+//+ end=+\(\n\n\)\@=+ contained
 
 syn region creoleH1     matchgroup=creoleHead start="^\s*=[^=]" end="\(\s*=\+\s*\)\?$"
 syn region creoleH2     matchgroup=creoleHead start="^\s*==[^=]" end="\(\s*=\+\s*\)\?$"
@@ -40,10 +46,12 @@ syn match creoleTableBorder "|=\?" contained
 syn match creoleHRule   "^\s*----\s*$"
 syn match creoleBreak   "\\\\"
 
-syn region creoleList     matchgroup=creoleOperator start="^\s*\(\*\|\#\)\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
-syn region creoleList     matchgroup=creoleOperator start="^\s*\:\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
-syn region creoleList     matchgroup=creoleOperator start="^\s*>\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
-syn region creoleList     matchgroup=creoleOperator start="^\s*;" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=creoleBold,creoleItalic,creoleBoldItalic,creoleMiscFormatting,creoleBreak,creoleCode
+syn cluster creoleInline contains=creoleUrl,creoleEscape,creoleLinkBlock,creoleImgBlock,creoleCode,creoleMiscFormatting,creolePlugin,creoleBold,creoleItalic,creoleBoldItalic,creoleBreak
+
+syn region creoleList     matchgroup=creoleOperator start="^\s*\(\*\|\#\)\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=@creoleInline
+syn region creoleList     matchgroup=creoleOperator start="^\s*\:\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=@creoleInline
+syn region creoleList     matchgroup=creoleOperator start="^\s*>\+" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=@creoleInline
+syn region creoleList     matchgroup=creoleOperator start="^\s*;" end="\n\n" end="\n\([*#:;=>]\)\@=" contains=@creoleInline
 
 hi def link creoleUrl Underlined
 hi def link creoleLinkText Todo
@@ -67,6 +75,7 @@ hi def link creoleTableBorder Keyword
 hi def creoleBold                term=bold cterm=bold gui=bold
 hi def creoleBoldUnderline       term=bold,underline cterm=bold,underline gui=bold,underline
 hi def creoleBoldItalic          term=bold,italic cterm=bold,italic gui=bold,italic
+hi def creoleItalicBold          term=bold,italic cterm=bold,italic gui=bold,italic
 hi def creoleBoldUnderlineItalic term=bold,italic,underline cterm=bold,italic,underline gui=bold,italic,underline
 hi def creoleUnderline           term=underline cterm=underline gui=underline
 hi def creoleUnderlineItalic     term=italic,underline cterm=italic,underline gui=italic,underline
